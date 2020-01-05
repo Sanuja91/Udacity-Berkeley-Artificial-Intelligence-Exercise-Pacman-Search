@@ -117,7 +117,7 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    # Use a Stack, so the search explores from the last node explored
+    # Use a Priority Queue, and use length of actions to set priority
     frontier = util.PriorityQueue()
     # Make an empty list of explored nodes
     explored = []
@@ -137,16 +137,35 @@ def breadthFirstSearch(problem):
                 actions_cpy = actions.copy()
                 actions_cpy.append(action)
                 frontier.push((next_state, actions_cpy), len(actions_cpy))
-
-
-
-    
-    util.raiseNotDefined()
+    return []
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    # Use a Priority Queue, and use cost to set priority
+    frontier = util.PriorityQueue()
+    # Make an empty list of explored nodes
+    explored = []
+    # Make an empty list of actions
+    actions = []
+
+    # Place the starting point in the stack
+    frontier.push((problem.getStartState(), actions, 0), 0)
+
+    while frontier:
+        state, actions, costs = frontier.pop()
+        if not state in explored:
+            explored.append(state)
+            if problem.isGoalState(state):
+                return actions
+            for next_state, action, cost in problem.getSuccessors(state):
+                actions_cpy = actions.copy()
+                new_cost = costs + cost
+                actions_cpy.append(action)
+                frontier.push((next_state, actions_cpy, new_cost), new_cost)
+    return []
+
 
 def nullHeuristic(state, problem=None):
     """
